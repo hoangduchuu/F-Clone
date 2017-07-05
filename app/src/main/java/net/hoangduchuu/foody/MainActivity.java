@@ -11,6 +11,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
+    int dem = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,42 +37,33 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("users");
 
+        databaseReference.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
 
-        Map<String, Object> valueUpdates = new HashMap<>();
-        valueUpdates.put("gioitinh", false);
-        valueUpdates.put("hoten", "Nong Duc manh hai");
+                User user = mutableData.getValue(User.class);
+                if (user == null){
+                    return Transaction.success(mutableData);
+                }else{
+                    Log.d("kiemtra", "else cmnr" + "- " + mutableData.toString());
+                    mutableData.setValue(user);
+                }
 
+                Log.d("kiemtra", "do" + "- " + mutableData.toString());
+                return Transaction.success(mutableData);
+            }
 
-        Map<String, Object> keyUpdates = new HashMap<>();
-        keyUpdates.put("user1", valueUpdates);
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                Log.d("kiemtra", "onComplete");
 
-        databaseReference.updateChildren(keyUpdates);
-
+            }
+        });
 
 
 //        databaseReference.setValue(true);
         btnThemDuLieu = (Button) findViewById(R.id.btnThemDuLieu);
         tvHienThi = (TextView) findViewById(R.id.tvHienThi);
-
-        databaseReference.addValueEventListener(this);
-
-        btnThemDuLieu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                databaseReference.child("ccc").setValue("kaka");
-//
-//                User user = new User("Cong Hoang" , false, "33");
-//                User user2 = new User("Khanh Hoang" , false, "43");
-//
-//                List<User> userList = new ArrayList<User>();
-//                userList.add(user);
-//
-//                userList.add(user2);
-//                databaseReference.child("users").child("user4").setValue(userList);
-
-
-            }
-        });
 
 
     }
