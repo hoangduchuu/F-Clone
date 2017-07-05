@@ -14,7 +14,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements ValueEventListener {
     Button btnThemDuLieu;
@@ -29,8 +31,22 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("baiviet").child("baiviet2");
-        databaseReference.removeValue();
+        databaseReference = firebaseDatabase.getReference().child("users");
+
+
+        Map<String, Object> valueUpdates = new HashMap<>();
+        valueUpdates.put("gioitinh", false);
+        valueUpdates.put("hoten", "Nong Duc manh hai");
+
+
+        Map<String, Object> keyUpdates = new HashMap<>();
+        keyUpdates.put("user1", valueUpdates);
+
+        databaseReference.updateChildren(keyUpdates);
+
+
+
+//        databaseReference.setValue(true);
         btnThemDuLieu = (Button) findViewById(R.id.btnThemDuLieu);
         tvHienThi = (TextView) findViewById(R.id.tvHienThi);
 
