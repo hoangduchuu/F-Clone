@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("users");
+        databaseReference = firebaseDatabase.getReference().child("baiviet").child("baiviet2");
+        databaseReference.removeValue();
         btnThemDuLieu = (Button) findViewById(R.id.btnThemDuLieu);
         tvHienThi = (TextView) findViewById(R.id.tvHienThi);
 
@@ -58,20 +59,20 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        Log.d("kiemtra", dataSnapshot.getKey().toString());
-        Log.d("kiemtra2", dataSnapshot.getValue().toString());
-        Log.d("kiemtra3", dataSnapshot.toString());
-
-        Iterable<DataSnapshot> nodeChild_Users = (Iterable<DataSnapshot>) dataSnapshot.getChildren();
-
-        for (DataSnapshot dataSnapshot1 : nodeChild_Users) {
-            User user = dataSnapshot1.getValue(User.class);
-
-//            Log.d("kiemtra4", dataSnapshot1.toString());
-            Log.d("kiemtra5", user.getHoten().toString());
-
-
-        }
+//        Log.d("kiemtra", dataSnapshot.getKey().toString());
+//        Log.d("kiemtra2", dataSnapshot.getValue().toString());
+//        Log.d("kiemtra3", dataSnapshot.toString());
+//
+//        Iterable<DataSnapshot> nodeChild_Users = (Iterable<DataSnapshot>) dataSnapshot.getChildren();
+//
+//        for (DataSnapshot dataSnapshot1 : nodeChild_Users) {
+//            User user = dataSnapshot1.getValue(User.class);
+//
+////            Log.d("kiemtra4", dataSnapshot1.toString());
+//            Log.d("kiemtra5", user.getHoten().toString());
+//
+//
+//        }
 
 
     }
