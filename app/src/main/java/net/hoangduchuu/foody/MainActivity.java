@@ -2,9 +2,11 @@ package net.hoangduchuu.foody;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ListViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,14 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements ValueEventListener {
-    Button btnThemDuLieu;
-    TextView tvHienThi;
+    ListView listView;
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-
-    int dem = 0;
-
+    List<User> userList;
+    AdapterUser adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,100 +36,35 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         setContentView(R.layout.activity_main);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference().child("users");
-
-        databaseReference.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-
-                User user = mutableData.getValue(User.class);
-                if (user == null){
-                    return Transaction.success(mutableData);
-                }else{
-                    Log.d("kiemtra", "else cmnr" + "- " + mutableData.toString());
-                    mutableData.setValue(user);
-                }
-
-                Log.d("kiemtra", "do" + "- " + mutableData.toString());
-                return Transaction.success(mutableData);
-            }
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
-                Log.d("kiemtra", "onComplete");
-
-            }
-        });
+        listView = (ListView) findViewById(R.id.lvView);
 
 
-//        databaseReference.setValue(true);
-        btnThemDuLieu = (Button) findViewById(R.id.btnThemDuLieu);
-        tvHienThi = (TextView) findViewById(R.id.tvHienThi);
+        userList = new ArrayList<>();
+
+
+        adapter= new AdapterUser(getApplicationContext(), R.layout.item_user_row, userList);
+        listView.setAdapter(adapter);
+
+
+        databaseReference.addValueEventListener(this);
 
 
     }
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-//        Log.d("kiemtra", dataSnapshot.getKey().toString());
-//        Log.d("kiemtra2", dataSnapshot.getValue().toString());
-//        Log.d("kiemtra3", dataSnapshot.toString());
-//
-//        Iterable<DataSnapshot> nodeChild_Users = (Iterable<DataSnapshot>) dataSnapshot.getChildren();
-//
-//        for (DataSnapshot dataSnapshot1 : nodeChild_Users) {
-//            User user = dataSnapshot1.getValue(User.class);
-//
-////            Log.d("kiemtra4", dataSnapshot1.toString());
-//            Log.d("kiemtra5", user.getHoten().toString());
-//
-//
-//        }
+        Iterable<DataSnapshot> nodeChild = dataSnapshot.getChildren();
+        for (DataSnapshot data : nodeChild) {
+            User user = data.getValue(User.class);
+            userList.add(user);
+            adapter.notifyDataSetChanged();
 
-
+        }
     }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
 
     }
-}
 
-class User {
-
-    String hoten;
-    boolean gioitinh;
-    Long tuoi;
-
-    public User() {
-    }
-
-    public User(String hoten, boolean gioitinh, Long tuoi) {
-        this.hoten = hoten;
-        this.gioitinh = gioitinh;
-        this.tuoi = tuoi;
-    }
-
-    public String getHoten() {
-        return hoten;
-    }
-
-    public void setHoten(String hoten) {
-        this.hoten = hoten;
-    }
-
-    public boolean isGioitinh() {
-        return gioitinh;
-    }
-
-    public void setGioitinh(boolean gioitinh) {
-        this.gioitinh = gioitinh;
-    }
-
-    public Long getTuoi() {
-        return tuoi;
-    }
-
-    public void setTuoi(Long tuoi) {
-        this.tuoi = tuoi;
-    }
 }
