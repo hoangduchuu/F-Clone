@@ -2,27 +2,20 @@ package net.hoangduchuu.foody;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ListViewCompat;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements ValueEventListener {
+public class MainActivity extends AppCompatActivity implements ChildEventListener {
     ListView listView;
 
     FirebaseDatabase firebaseDatabase;
@@ -42,29 +35,57 @@ public class MainActivity extends AppCompatActivity implements ValueEventListene
         userList = new ArrayList<>();
 
 
-        adapter= new AdapterUser(getApplicationContext(), R.layout.item_user_row, userList);
+        adapter = new AdapterUser(getApplicationContext(), R.layout.item_user_row, userList);
         listView.setAdapter(adapter);
 
+        Query query = databaseReference.orderByKey();
 
-        databaseReference.addValueEventListener(this);
+        query.addChildEventListener(this);
+
+
+    }
+
+
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        User user = dataSnapshot.getValue(User.class);
+        userList.add(user);
+        adapter.notifyDataSetChanged();
+        Log.d("kiemtra", "added");
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        Log.d("kiemtra", "onChildChanged");
+        refreshList();
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+        Log.d("kiemtra", "onChildRemoved");
+        refreshList();
 
 
     }
 
     @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-        Iterable<DataSnapshot> nodeChild = dataSnapshot.getChildren();
-        for (DataSnapshot data : nodeChild) {
-            User user = data.getValue(User.class);
-            userList.add(user);
-            adapter.notifyDataSetChanged();
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+        Log.d("kiemtra", "onChildMoved");
+        refreshList();
 
-        }
     }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
+        Log.d("kiemtra", "onCancelled");
+        refreshList();
+
 
     }
 
+    private void refreshList() {
+        userList.clear();
+        databaseReference.removeEventListener(this);
+        databaseReference.addChildEventListener(this);
+    }
 }
