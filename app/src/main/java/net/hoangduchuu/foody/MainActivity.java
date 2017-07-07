@@ -1,6 +1,7 @@
 package net.hoangduchuu.foody;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -34,8 +36,23 @@ public class MainActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
+
 //        streamUploadingFromLocalFile();
-        uploadFileFromUri();
+//        uploadFileFromUri();
+        downloadFileFromStorage();
+    }
+
+    private void downloadFileFromStorage() {
+        long mega_byte = 1024 * 1024;
+
+        storageReference.child("uri").child("dep.jpg").getBytes(mega_byte).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                imageView.setImageBitmap(bitmap);
+            }
+        });
+
     }
 
     private void uploadFileFromUri() {
