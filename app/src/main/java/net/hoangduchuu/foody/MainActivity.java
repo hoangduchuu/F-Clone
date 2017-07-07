@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         photoReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("kiemtra", "xoa aaa.jpg thanh conga");
+                Log.d("kiemtra", "xoa aaa.jpg thanh cong // test github");
             }
         });
     }
