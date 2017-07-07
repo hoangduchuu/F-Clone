@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBgMain"
+    android:orientation="vertical"
+    tools:context="net.hoangduchuu.foody.View.SplashScreenActivity">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        app:srcCompat="@drawable/foodytext" />
+
+    <TextView
+        android:id="@+id/txtVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:text="Version 2.2.0"
+        android:textColor="@android:color/white" />
+
+
+    <TextView
+        android:id="@+id/tvBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:padding="10sp"
+        android:text="@string/huu_hoang"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+    <ProgressBar
+        android:id="@+id/pbMain"
+        android:layout_width="30sp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvBottom"
+        android:layout_alignLeft="@+id/tvBottom"
+        android:layout_alignStart="@+id/tvBottom"
+        android:indeterminateTint="@android:color/white" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tvBottom"
+        android:layout_marginBottom="15dp"
+        android:layout_toEndOf="@+id/pbMain"
+        android:layout_toRightOf="@+id/pbMain"
+        android:text="@string/loading"
+        android:textColor="@android:color/white" />
+
+</RelativeLayout>

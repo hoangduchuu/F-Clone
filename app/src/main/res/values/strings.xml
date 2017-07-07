@@ -2,4 +2,9 @@
     <string name="app_name">Foody</string>
     <string name="facebook_app_id">473064569718293</string>
     <string name="fb_login_protocol_scheme">fb473064569718293</string>
+
+    <!--SplashActivity-->
+    <string name="huu_hoang">Huu Hoang</string>
+    <string name="loading">loading</string>
+    <string name="version">Version </string>
 </resources>
