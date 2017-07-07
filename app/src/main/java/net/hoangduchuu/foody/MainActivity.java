@@ -7,8 +7,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,13 +27,16 @@ import java.net.URL;
 public class MainActivity extends AppCompatActivity {
     FirebaseStorage storage;
     StorageReference storageReference;
-    ImageView imageView;
+    ImageView imageView, imageView2;
+    long ONE_MEGA_BYTE = 1024 * 1024;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = (ImageView) findViewById(R.id.ivPhoto);
+        imageView2 = (ImageView) findViewById(R.id.ivPhoto2);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -43,15 +48,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void downloadFileFromStorage() {
-        long mega_byte = 1024 * 1024;
 
-        storageReference.child("uri").child("dep.jpg").getBytes(mega_byte).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        StorageReference uriReference = storageReference.child("uri");
+
+        uriReference.child("dep.jpg").getBytes(ONE_MEGA_BYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 imageView.setImageBitmap(bitmap);
             }
-        });
+        }); // this is first way
+
+        storageReference.child("photos").child("song-son.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d("kiemtra", String.valueOf(uri));
+//                imageView2.setImageURI(uri);
+                Glide.with(getApplicationContext())
+                        .load(uri)
+                        .into(imageView2);
+            }
+        }); // this is second way
 
     }
 
