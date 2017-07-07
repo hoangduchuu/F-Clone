@@ -44,7 +44,19 @@ public class MainActivity extends AppCompatActivity {
 
 //        streamUploadingFromLocalFile();
 //        uploadFileFromUri();
-        downloadFileFromStorage();
+//        downloadFileFromStorage();
+
+        deletefile();
+    }
+
+    private void deletefile() {
+        StorageReference photoReference = storageReference.child("photos/aaa.jpg");
+        photoReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("kiemtra", "xoa aaa.jpg thanh cong");
+            }
+        });
     }
 
     private void downloadFileFromStorage() {
