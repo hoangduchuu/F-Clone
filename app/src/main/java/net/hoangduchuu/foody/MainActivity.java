@@ -44,13 +44,13 @@ public class MainActivity extends AppCompatActivity {
 
 //        streamUploadingFromLocalFile();
 //        uploadFileFromUri();
-//        downloadFileFromStorage();
+        downloadFileFromStorage();
 
-        deletefile();
+//        deletefile();
     }
 
     private void deletefile() {
-        StorageReference photoReference = storageReference.child("photos/aaa.jpg");
+        StorageReference photoReference = storageReference.child("photos/bb.jpg");
         photoReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
