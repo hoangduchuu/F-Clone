@@ -11,6 +11,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -22,6 +28,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -39,29 +46,29 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
     FirebaseAuth mAuth;
     SignInButton btnGoogleSignin;
+    LoginButton btnFacebookSignin;
     final int MY_REQUEST_CODE = 3;
     Button logout;
 
+    CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FacebookSdk.sdkInitialize(getApplicationContext());
 
         mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
 
 
-        btnGoogleSignin = (SignInButton) findViewById(R.id.btnGoogleLogin);
-        logout = (Button) findViewById(R.id.btnLogoutMain);
+        callbackManager = CallbackManager.Factory.create();
 
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAuth.signOut();
-                Log.d("kiemtra", "logged out");
-            }
-        });
+        btnGoogleSignin = (SignInButton) findViewById(R.id.btnGoogleLogin);
+        btnFacebookSignin = (LoginButton) findViewById(R.id.btnLoginFacebook);
+
+        logout = (Button) findViewById(R.id.btnLogoutMain);
+        logoutMethod();
 
 
         FirebaseUser user = mAuth.getCurrentUser();
@@ -72,7 +79,59 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         }
 
-        googleSigninMethod();
+//        googleSigninMethod();
+        facebookSigninMethod();
+    }
+
+    private void logoutMethod() {
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                Log.d("kiemtra", "logged out");
+            }
+        });
+    }
+
+    private void facebookSigninMethod() {
+
+        btnFacebookSignin.setReadPermissions("email", "public_profile");
+        btnFacebookSignin.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                String tokenId = loginResult.getAccessToken().getToken();
+
+                AuthCredential credential = FacebookAuthProvider.getCredential(tokenId);
+                mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("kiemtra - facebook:", "login ok - " + task.getResult().getAdditionalUserInfo().toString());
+                        } else {
+                            Log.d("kiemtra - facebook:", "login failed - " + task.getException().getMessage().toString());
+
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+
+            }
+        });
+        btnFacebookSignin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "faceboked", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void googleSigninMethod() {
@@ -99,31 +158,6 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == MY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                String tokenID = result.getSignInAccount().getIdToken();
-                AuthCredential credential = GoogleAuthProvider.getCredential(tokenID, null);
-                mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (task.isSuccessful()) {
-                            Log.d("kiemtra - gooogle - OK", "dang nhap thanh cong gooogle oi" + user.getEmail());
-                        } else {
-                            Log.d("kiemtra - gooogle - Failed", "dang nhap failed gooogle oi");
-
-                        }
-                    }
-                });
-
-            }
-        }
-    }
-
-    @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
@@ -133,6 +167,12 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
             Toast.makeText(this, "dang nhap that bai", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

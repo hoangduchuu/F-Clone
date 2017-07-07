@@ -20,4 +20,9 @@
         android:layout_height="wrap_content"
         android:text="logout" />
 
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/btnLoginFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
