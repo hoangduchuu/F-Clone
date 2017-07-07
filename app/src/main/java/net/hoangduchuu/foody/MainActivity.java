@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
     FirebaseAuth mAuth;
     SignInButton btnGoogleSignin;
-    final int MY_REQUEST_CODE = 333;
+    final int MY_REQUEST_CODE = 3;
+    Button logout;
 
 
     @Override
@@ -47,11 +48,29 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnGoogleSignin = (SignInButton) findViewById(R.id.btnGoogleLogin);
-
-
         mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
+
+
+        btnGoogleSignin = (SignInButton) findViewById(R.id.btnGoogleLogin);
+        logout = (Button) findViewById(R.id.btnLogoutMain);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                Log.d("kiemtra", "logged out");
+            }
+        });
+
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            Log.d("kiemtra - user", user.getEmail().toString());
+        } else {
+            Log.d("kiemtra - user", "none roi");
+
+        }
 
         googleSigninMethod();
     }
@@ -90,8 +109,9 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        FirebaseUser user = mAuth.getCurrentUser();
                         if (task.isSuccessful()) {
-                            Log.d("kiemtra - gooogle - OK", "dang nhap thanh cong gooogle oi");
+                            Log.d("kiemtra - gooogle - OK", "dang nhap thanh cong gooogle oi" + user.getEmail());
                         } else {
                             Log.d("kiemtra - gooogle - Failed", "dang nhap failed gooogle oi");
 
