@@ -32,7 +32,8 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".View.HomePageActivity" />
-        <activity android:name=".View.RegisterActivity"></activity>
+        <activity android:name=".View.RegisterActivity" />
+        <activity android:name=".View.ForgotPasswordActivity"></activity>
     </application>
 
 </manifest>

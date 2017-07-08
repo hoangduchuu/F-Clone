@@ -63,9 +63,11 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 startActivity(new Intent(SplashScreenActivity.this, LoginActivity.class));
+                finish();
+
+
             }
         }, time);
-        finish();
     }
 
     private void findViewByIds() {

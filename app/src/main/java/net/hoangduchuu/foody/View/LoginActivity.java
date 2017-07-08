@@ -1,17 +1,16 @@
 package net.hoangduchuu.foody.View;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -35,25 +34,20 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import net.hoangduchuu.foody.R;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public class LoginActivity extends AppCompatActivity
         implements GoogleApiClient.OnConnectionFailedListener
         , View.OnClickListener
         , FirebaseAuth.AuthStateListener {
-    Button btnGoogle;
+    Button btnGoogle, btnLogin;
     LoginButton btnFacebook;
     FirebaseAuth mAuth;
     GoogleApiClient apiClient;
     public static final int REQUEST_CODE_GOOGLE_SIGNIN = 99;
-    public static int CHECK_SIGNIN_METHOD = 0;
+    public static int CHECK_SIGNIN_METHOD = 0;// 1 IS GOOGLE // 2 IS FACEBOOK
     CallbackManager mCallbackManager;
-
-    TextView txtRegister;
-
-    // 1 IS GOOGLE
-    // 2 IS FACEBOOK
+    TextView txtRegister, tvForgotPass;
+    EditText edtMail, edtPass;
+    ProgressBar pgLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +58,31 @@ public class LoginActivity extends AppCompatActivity
         mCallbackManager = CallbackManager.Factory.create();
 
         mAuth = FirebaseAuth.getInstance();
-
+        mAuth.signOut();
 
         findViewByIds();
         createCliendGoogleLogin();
         facebokLogin();
+
+    }
+
+    private void loginWithUserAndPass(String mail, String pass) {
+        pgLoading.setVisibility(View.VISIBLE);
+
+        mAuth.signInWithEmailAndPassword(mail, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (task.isSuccessful()) {
+                    pgLoading.setVisibility(View.GONE);
+                    Toast.makeText(LoginActivity.this, "Dang nhap thanh cong", Toast.LENGTH_SHORT).show();
+//                    startActivity(new Intent(LoginActivity.this, HomePageActivity.class));
+                } else {
+                    pgLoading.setVisibility(View.GONE);
+                    Toast.makeText(LoginActivity.this, "Dang nhap khong thanh cong", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void facebokLogin() {
@@ -142,12 +156,22 @@ public class LoginActivity extends AppCompatActivity
     private void findViewByIds() {
         btnGoogle = (Button) findViewById(R.id.btnDangNhapGoogle);
         btnFacebook = (LoginButton) findViewById(R.id.btnDangNhapFacebook);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
         txtRegister = (TextView) findViewById(R.id.txtDangKyMoi);
+        tvForgotPass = (TextView) findViewById(R.id.tvForgotPass);
+        pgLoading = (ProgressBar) findViewById(R.id.pgLoading);
+
+
+        edtMail = (EditText) findViewById(R.id.edtEmail);
+        edtPass = (EditText) findViewById(R.id.edtPassword);
 
 
         btnGoogle.setOnClickListener(this);
         btnFacebook.setOnClickListener(this);
         txtRegister.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
+        tvForgotPass.setOnClickListener(this);
+
     }
 
 
@@ -191,6 +215,18 @@ public class LoginActivity extends AppCompatActivity
                 break;
             case R.id.txtDangKyMoi:
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                break;
+            case R.id.btnLogin:
+                String mail = edtMail.getText().toString().trim();
+                String pass = edtPass.getText().toString().trim();
+                if (edtPass.length() > 0 && edtPass.length() > 0) {
+                    loginWithUserAndPass(mail, pass);
+                } else {
+                    Toast.makeText(this, "check mail and pass", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.tvForgotPass:
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
                 break;
 
         }
