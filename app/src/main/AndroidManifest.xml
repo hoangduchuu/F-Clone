@@ -13,12 +13,17 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".View.SplashScreenActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
+
+            <data android:scheme="@string/fb_login_protocol_scheme" />
         </activity>
         <activity android:name=".View.LoginActivity" />
 
@@ -26,7 +31,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".View.HomePageActivity"></activity>
+        <activity android:name=".View.HomePageActivity" />
+        <activity android:name=".View.RegisterActivity"></activity>
     </application>
 
 </manifest>
