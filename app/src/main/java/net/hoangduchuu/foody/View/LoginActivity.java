@@ -58,8 +58,6 @@ public class LoginActivity extends AppCompatActivity
         mCallbackManager = CallbackManager.Factory.create();
 
         mAuth = FirebaseAuth.getInstance();
-        mAuth.signOut();
-
         findViewByIds();
         createCliendGoogleLogin();
         facebokLogin();
