@@ -19,10 +19,7 @@ public class HomePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
 
         mAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
 
-        TextView textView = (TextView) findViewById(R.id.tvHelo);
 
-        textView.setText(user.getEmail().toString());
     }
 }
