@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import net.hoangduchuu.foody.Interface.OdauInterface;
 import net.hoangduchuu.foody.utils.Constants;
 
 import java.util.ArrayList;
@@ -21,14 +22,14 @@ public class QuanAnModel {
     boolean giaohang;
     String giodongcua, giomocua, tenquanan, videogioithieu, maquanan;
     Long luotthich;
-    List<String> tienich;
+    List<String> tienich, hinhquanan;
 
     List<QuanAnModel> quanAnModelList;
 
-    DatabaseReference dataQuanAn;
+    DatabaseReference nodeRoot;
 
     public QuanAnModel() {
-        dataQuanAn = FirebaseDatabase.getInstance().getReference().child(Constants.NODE_QUAN_AN_S);
+        nodeRoot = FirebaseDatabase.getInstance().getReference();
     }
 
     public boolean isGiaohang() {
@@ -95,20 +96,37 @@ public class QuanAnModel {
         this.luotthich = luotthich;
     }
 
-    // by hand
-    public List<QuanAnModel> getDanhSachQuanAn() {
-        quanAnModelList = new ArrayList<>();
+    public List<String> getHinhquanan() {
+        return hinhquanan;
+    }
+
+    public void setHinhquanan(List<String> hinhquanan) {
+        this.hinhquanan = hinhquanan;
+    }
+
+    public void getDanhSachQuanAn(final OdauInterface odauInterface) {
+
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot dataValue : dataSnapshot.getChildren()) {
-                    QuanAnModel quanAnModel = dataValue.getValue(QuanAnModel.class);
-                    Log.d("kiemtra-a", quanAnModel.getTenquanan() + "--video---"
-                            + quanAnModel.getVideogioithieu() + "--luotthich---" + quanAnModel.getLuotthich() + "---"+ quanAnModel.isGiaohang());
-                    quanAnModelList.add(quanAnModel);
-                    Log.d("kiemtra-QqModel-size", quanAnModelList.size() +"");
+                DataSnapshot dataSnapshotQuanAn = dataSnapshot.child(Constants.NODE_QUAN_AN_S);
+                for (DataSnapshot valueQuanAn : dataSnapshotQuanAn.getChildren()) {
+                    QuanAnModel quanAnModel = valueQuanAn.getValue(QuanAnModel.class);
 
+                    Log.d("kiemtra-quanan", valueQuanAn.getKey() + "");
+                    quanAnModel.setMaquanan(valueQuanAn.getKey());
+                    String maQuanAn = valueQuanAn.getKey();
+                    DataSnapshot dataShotHinhQuanAn = dataSnapshot.child(Constants.NODE_HINH_ANH_QUAN_AN_S).child(maQuanAn);
+                    List<String> hinhQuanAnList = new ArrayList<>();
+                    for (DataSnapshot valueHinhQuanAn : dataShotHinhQuanAn.getChildren()) {
+                        hinhQuanAnList.add(valueHinhQuanAn.getValue(String.class));
+
+                    }
+
+                    quanAnModel.setHinhquanan(hinhQuanAnList);
+                    odauInterface.getDanhSachQuanAnModel(quanAnModel);
                 }
+
             }
 
             @Override
@@ -116,9 +134,9 @@ public class QuanAnModel {
 
             }
         };
-        dataQuanAn.addListenerForSingleValueEvent(valueEventListener);
 
-        return quanAnModelList;
-
+        nodeRoot.addListenerForSingleValueEvent(valueEventListener);
     }
+
+    // by hand
 }

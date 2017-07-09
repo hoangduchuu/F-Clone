@@ -3,11 +3,12 @@ package net.hoangduchuu.foody.View.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.hoangduchuu.foody.Controller.OdauController;
 import net.hoangduchuu.foody.Model.QuanAnModel;
 import net.hoangduchuu.foody.R;
 
@@ -18,20 +19,22 @@ import java.util.List;
  */
 
 public class ODauFragment extends Fragment {
-    QuanAnModel quanAnModel;
+    OdauController odauController;
+    RecyclerView recyclerViewOdau;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_fragment_odau, container, false);
+        recyclerViewOdau = (RecyclerView) view.findViewById(R.id.RecyclerOdau);
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        quanAnModel = new QuanAnModel();
-        List<QuanAnModel> quanAnModelList = quanAnModel.getDanhSachQuanAn();
-        Log.d("kiemtra-odau", quanAnModelList.size() +"");
+        odauController = new OdauController(getContext());
+        odauController.getDanhSachQuanAnController(recyclerViewOdau);
+
     }
 }
