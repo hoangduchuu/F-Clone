@@ -25,9 +25,9 @@ public class AdapterViewPagerHomePage extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return anGiFragment;
-            case 1:
                 return oDauFragment;
+            case 1:
+                return anGiFragment;
             default:
                 return null;
         }

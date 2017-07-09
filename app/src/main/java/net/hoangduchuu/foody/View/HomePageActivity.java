@@ -67,15 +67,17 @@ public class HomePageActivity extends AppCompatActivity implements ViewPager.OnP
 
     }
 
+    // when select radiobutton on top viewpager scroll
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
         switch (i) {
             case R.id.rd_odau:
-                viewPagerHome.setCurrentItem(0,true);
+                viewPagerHome.setCurrentItem(0, true);
                 break;
             case R.id.rd_angi:
-                viewPagerHome.setCurrentItem(1,true);
+                viewPagerHome.setCurrentItem(1, true);
                 break;
         }
-    }
+    }// end when select radiobutton on top viewpager scroll
+
 }

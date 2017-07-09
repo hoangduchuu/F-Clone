@@ -86,30 +86,14 @@
                 android:weightSum="2">
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
+                    style="@style/ButtonFragmentStyle"
                     android:drawableLeft="@drawable/nearby"
-                    android:drawablePadding="10dp"
-                    android:gravity="left|center"
-                    android:padding="10dp"
-                    android:text="@string/gantoi"
-                    android:textAllCaps="false" />
+                    android:text="@string/gantoi" />
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
+                    style="@style/ButtonFragmentStyle"
                     android:drawableLeft="@drawable/order"
-                    android:drawablePadding="10dp"
-                    android:gravity="left|center"
-                    android:padding="10dp"
-                    android:text="@string/giaohang"
-                    android:textAllCaps="false" />
+                    android:text="@string/giaohang" />
             </LinearLayout>
 
             <LinearLayout
@@ -119,30 +103,14 @@
                 android:weightSum="2">
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
+                    style="@style/ButtonFragmentStyle"
                     android:drawableLeft="@drawable/gameandfun"
-                    android:drawablePadding="10dp"
-                    android:gravity="left|center"
-                    android:padding="10dp"
-                    android:text="@string/gameandfun"
-                    android:textAllCaps="false" />
+                    android:text="@string/gameandfun" />
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
+                    style="@style/ButtonFragmentStyle"
                     android:drawableLeft="@drawable/review"
-                    android:drawablePadding="10dp"
-                    android:gravity="left|center"
-                    android:padding="10dp"
-                    android:text="@string/danhgia"
-                    android:textAllCaps="false" />
+                    android:text="@string/danhgia" />
             </LinearLayout>
 
             <LinearLayout
@@ -152,30 +120,14 @@
                 android:weightSum="2">
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
+                    style="@style/ButtonFragmentStyle"
                     android:drawableLeft="@drawable/blog"
-                    android:drawablePadding="10dp"
-                    android:gravity="left|center"
-                    android:padding="10dp"
-                    android:text="@string/blogs"
-                    android:textAllCaps="false" />
+                    android:text="@string/blogs" />
 
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/white"
+                    style="@style/ButtonFragmentStyle"
                     android:drawableLeft="@drawable/user"
-                    android:drawablePadding="10dp"
-                    android:gravity="left|center"
-                    android:padding="10dp"
-                    android:text="@string/topmember"
-                    android:textAllCaps="false" />
+                    android:text="@string/topmember" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
